@@ -10,7 +10,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 
 @RestController
@@ -48,7 +47,7 @@ public class ItemController {
 
     @GetMapping("/search")
     public Collection<ItemDto> searchItem(@RequestParam String text) {
-        if (text == null || text.isEmpty()){
+        if (text == null || text.isEmpty()) {
             return new ArrayList<>();
         }
         return service.searchItemByName(text);
