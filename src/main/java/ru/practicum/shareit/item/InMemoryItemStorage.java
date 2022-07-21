@@ -24,16 +24,16 @@ public class InMemoryItemStorage implements ItemDao {
     @Override
     public Item update(Item item, Long id) {
 
-        Item i = getById(id);
+        Item oldItem = getById(id);
 
-        if (i != null) {
+        if (oldItem != null) {
             Item update = new Item();
             update.setId(id);
-            update.setName(item.getName() == null ? i.getName() : item.getName());
-            update.setDescription(item.getDescription() == null ? i.getDescription() : item.getDescription());
+            update.setName(item.getName() == null ? oldItem.getName() : item.getName());
+            update.setDescription(item.getDescription() == null ? oldItem.getDescription() : item.getDescription());
             update.setOwner(item.getOwner());
-            update.setAvailable(item.getAvailable() == null ? i.getAvailable() : item.getAvailable());
-            items.put(i.getId(), update);
+            update.setAvailable(item.getAvailable() == null ? oldItem.getAvailable() : item.getAvailable());
+            items.put(oldItem.getId(), update);
             return update;
         }
         return null;

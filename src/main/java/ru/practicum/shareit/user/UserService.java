@@ -17,14 +17,12 @@ public class UserService {
 
     UserDto create(User user) {
 
-        checkDuplicateEmail(user);
         userDao.create(user);
         return converter.convert(userDao.getUserById(user.getId()));
     }
 
     UserDto update(User user, Long id) {
 
-        checkDuplicateEmail(user);
         userDao.update(user, id);
         return converter.convert(userDao.getUserById(id));
     }
@@ -43,18 +41,6 @@ public class UserService {
 
         List<User> users = userDao.getAllUsers();
         return users.stream().map(converter::convert).collect(Collectors.toList());
-    }
-
-    private void checkDuplicateEmail(User user) {
-
-        List<User> users = userDao.getAllUsers();
-
-        List<User> email = users.stream().filter(u -> u.getEmail().equals(user.getEmail())).collect(Collectors.toList());
-
-        if (!email.isEmpty()) {
-            throw new DuplicateEmailException("Пользователь с таким email уже существует!");
-        }
-
     }
 
 }

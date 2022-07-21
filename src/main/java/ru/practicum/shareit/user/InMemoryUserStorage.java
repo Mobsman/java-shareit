@@ -2,10 +2,12 @@ package ru.practicum.shareit.user;
 
 
 import org.springframework.stereotype.Component;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
 public class InMemoryUserStorage implements UserDao {
@@ -15,7 +17,7 @@ public class InMemoryUserStorage implements UserDao {
 
     @Override
     public User create(User user) {
-
+        checkDuplicateEmail(user);
         user.setId(getId());
         users.put(user.getId(), user);
         return user;
@@ -24,6 +26,7 @@ public class InMemoryUserStorage implements UserDao {
     @Override
     public User update(User user, Long id) {
 
+        checkDuplicateEmail(user);
         User u = users.get(id);
 
         if (u != null) {
@@ -56,4 +59,17 @@ public class InMemoryUserStorage implements UserDao {
         id++;
         return id;
     }
+
+    private void checkDuplicateEmail(User user) {
+
+        List<User> users = getAllUsers();
+
+        List<User> email = users.stream().filter(u -> u.getEmail().equals(user.getEmail())).collect(Collectors.toList());
+
+        if (!email.isEmpty()) {
+            throw new DuplicateEmailException("Пользователь с таким email уже существует!");
+        }
+
+    }
+
 }
