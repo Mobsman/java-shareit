@@ -12,12 +12,14 @@ import ru.practicum.shareit.item.dto.ConverterCommentItemToCommentDto;
 import ru.practicum.shareit.item.dto.ConverterItemToDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Comment;
+import ru.practicum.shareit.item.model.CommentRequest;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.CommentRepository;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserNotFoundException;
 import ru.practicum.shareit.user.repository.UserRepository;
+
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -111,14 +113,14 @@ public class ItemService {
     }
 
 
-    public CommentDto addComment(long userId, long itemId, Comment comment) {
+    public CommentDto addComment(long userId, long itemId, CommentRequest comment) {
 
-        User user = userRepository.findById(userId).orElseThrow(()-> new UserNotFoundException("пользователь не найден"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("пользователь не найден"));
 
         Item item = itemRepository.findById(itemId).orElseThrow(() -> new ItemNotFoundException("предмет не найден"));
 
         List<Booking> booking = bookingRepository.findBookingsByItemIdAndBookerIdAndStatusAndStartBefore(itemId,
-                        userId,Status.APPROVED,LocalDateTime.now());
+                userId, Status.APPROVED, LocalDateTime.now());
 
         if (booking == null || booking.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,

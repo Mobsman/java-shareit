@@ -16,6 +16,7 @@ import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserNotFoundException;
 import ru.practicum.shareit.user.repository.UserRepository;
+
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -102,7 +103,7 @@ public class BookingService {
 
     }
 
-    public List<BookingDto> getAllBookingOfCurrentUser(long bookerId, Status status)  {
+    public List<BookingDto> getAllBookingOfCurrentUser(long bookerId, Status status) {
 
         switch (status) {
             case ALL:
@@ -128,7 +129,7 @@ public class BookingService {
         }
     }
 
-    public List<BookingDto> getAllItemBookingsOfCurrentUser(long ownerId, Status status)  {
+    public List<BookingDto> getAllItemBookingsOfCurrentUser(long ownerId, Status status) {
 
         Optional<User> owner = userRepository.findById(ownerId);
 
@@ -165,7 +166,7 @@ public class BookingService {
 
     }
 
-    private List<BookingDto> checkEmptyList (List list){
+    private List<BookingDto> checkEmptyList(List list) {
         if (list.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ошибка");
         } else return list;

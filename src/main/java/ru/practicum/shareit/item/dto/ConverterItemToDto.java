@@ -31,8 +31,8 @@ public class ConverterItemToDto implements Converter<Item, ItemDto> {
                 .description(source.getDescription())
                 .available(source.getAvailable())
                 .comments(source.getComments())
-                .nextBooking(bookingAfter != null ? BookingForItem.builder().id(bookingAfter.getId()).bookerId(bookingAfter.getBooker().getId()).build():null)
-                .lastBooking(bookingBefore != null ?BookingForItem.builder().id(bookingBefore.getId()).bookerId(bookingBefore.getBooker().getId()).build():null)
+                .nextBooking(bookingAfter != null ? BookingForItem.builder().id(bookingAfter.getId()).bookerId(bookingAfter.getBooker().getId()).build() : null)
+                .lastBooking(bookingBefore != null ? BookingForItem.builder().id(bookingBefore.getId()).bookerId(bookingBefore.getBooker().getId()).build() : null)
                 .build();
 
     }

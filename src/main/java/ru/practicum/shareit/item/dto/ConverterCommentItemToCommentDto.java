@@ -11,7 +11,7 @@ public class ConverterCommentItemToCommentDto implements Converter<Comment, Comm
     @Override
     public CommentDto convert(Comment source) {
 
-       return CommentDto.builder()
+        return CommentDto.builder()
                 .id(source.getId())
                 .text(source.getText())
                 .authorName(source.getUser().getName())

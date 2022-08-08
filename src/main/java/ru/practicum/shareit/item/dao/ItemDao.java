@@ -1,6 +1,7 @@
 package ru.practicum.shareit.item.dao;
 
 import ru.practicum.shareit.item.model.Item;
+
 import java.util.Collection;
 
 
@@ -8,7 +9,7 @@ public interface ItemDao {
 
     Item create(Item item);
 
-    Item update(Item item,Long id);
+    Item update(Item item, Long id);
 
     Item getById(Long id);
 
