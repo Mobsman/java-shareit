@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @Data
 public class Booking {
 
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")

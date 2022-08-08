@@ -112,7 +112,6 @@ public class ItemService {
 
     }
 
-
     public CommentDto addComment(long userId, long itemId, CommentRequest comment) {
 
         User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("пользователь не найден"));

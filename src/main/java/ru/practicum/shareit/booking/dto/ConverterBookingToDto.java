@@ -8,6 +8,7 @@ import ru.practicum.shareit.booking.model.Booking;
 @Component
 public class ConverterBookingToDto implements Converter<Booking, BookingDto> {
 
+
     @Override
     public BookingDto convert(Booking source) {
 

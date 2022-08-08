@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 @Component
 public class InMemoryUserStorage implements UserDao {
 
+
     private final Map<Long, User> users = new HashMap<Long, User>();
     private Long id = 0L;
 

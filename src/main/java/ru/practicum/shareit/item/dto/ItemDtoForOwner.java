@@ -11,6 +11,7 @@ import java.util.List;
 @Builder
 public class ItemDtoForOwner {
 
+
     private Long id;
     private String name;
     private String description;

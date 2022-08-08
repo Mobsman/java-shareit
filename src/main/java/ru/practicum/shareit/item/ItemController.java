@@ -44,6 +44,7 @@ public class ItemController {
         return service.getById(itemId, userId);
     }
 
+
     @GetMapping
     public Collection<ItemDto> getAllItemsByUserId(@NotEmpty @RequestHeader(USER_ID_HEADER) long id) {
         return service.getAllItemsByUserId(id);

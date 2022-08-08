@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @Table(name = "requests")
 public class ItemRequest {
 
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")

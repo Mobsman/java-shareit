@@ -9,6 +9,7 @@ import java.util.List;
 
 public interface BookingRepository extends JpaRepository<Booking, Long> {
 
+
     List<Booking> findBookingsByBookerIdOrderByStartDesc(long bookerId);
 
     List<Booking> findBookingsByBookerIdAndEndBeforeOrderByStartDesc(long bookerId, LocalDateTime time);
