@@ -2,10 +2,11 @@ package ru.practicum.shareit.item;
 
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.UserNotFoundException;
-
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import java.util.ArrayList;
@@ -28,16 +29,17 @@ public class ItemController {
     }
 
     @PatchMapping("/{itemId}")
-    public ItemDto updateItem(@NotEmpty @RequestHeader(USER_ID_HEADER) Long id,
+    public ItemDto updateItem(@NotEmpty @RequestHeader(USER_ID_HEADER) Long ownerId,
                               @RequestBody Item item,
                               @PathVariable Long itemId) {
-        return service.update(id, item, itemId);
+        return service.update(ownerId, item, itemId);
     }
 
 
     @GetMapping("/{itemId}")
-    public ItemDto getItemById(@PathVariable long itemId) {
-        return service.getById(itemId);
+    public ItemDto getItemById(@NotEmpty @RequestHeader(USER_ID_HEADER) long userId,
+                               @PathVariable long itemId) {
+        return service.getById(itemId,userId);
     }
 
     @GetMapping
@@ -51,6 +53,13 @@ public class ItemController {
             return new ArrayList<>();
         }
         return service.searchItemByName(text);
+    }
+
+    @PostMapping("{itemId}/comment")
+    public CommentDto addComment(@NotEmpty @RequestHeader(USER_ID_HEADER) long userId,
+                                  @PathVariable long itemId,
+                                  @RequestBody Comment comment) {
+        return service.addComment(userId, itemId, comment);
     }
 
 }
