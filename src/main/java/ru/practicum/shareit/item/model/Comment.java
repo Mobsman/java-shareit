@@ -1,7 +1,6 @@
 package ru.practicum.shareit.item.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import ru.practicum.shareit.user.User;
 
@@ -25,7 +24,7 @@ public class Comment {
     @Column(name = "created")
     private LocalDateTime created;
 
-    @ManyToOne(cascade = CascadeType.ALL ,fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonBackReference
     @JoinColumn(name = "item_id")
     private Item item;
