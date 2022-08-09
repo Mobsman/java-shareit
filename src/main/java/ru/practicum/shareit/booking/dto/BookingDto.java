@@ -17,11 +17,8 @@ public class BookingDto {
     private LocalDateTime start;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private LocalDateTime end;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Status status;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     private User booker;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Item item;
 
 }

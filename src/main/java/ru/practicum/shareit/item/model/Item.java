@@ -1,5 +1,6 @@
 package ru.practicum.shareit.item.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import ru.practicum.shareit.requests.ItemRequest;
 import ru.practicum.shareit.user.User;
@@ -39,11 +40,13 @@ public class Item {
     @JoinColumn(name = "owner_id")
     private User owner;
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "request_id")
     private ItemRequest request;
 
-    @OneToMany(mappedBy = "item")
+    @JsonManagedReference
+    @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY,
+            mappedBy = "item")
     private List<Comment> comments;
 
 }
