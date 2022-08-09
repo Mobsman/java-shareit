@@ -2,16 +2,20 @@ package ru.practicum.shareit.item.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import ru.practicum.shareit.requests.ItemRequest;
 import ru.practicum.shareit.user.User;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
 
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "items")
 public class Item {
@@ -47,6 +51,6 @@ public class Item {
     @JsonManagedReference
     @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY,
             mappedBy = "item")
-    private List<Comment> comments;
+    private List<Comment> comments = new ArrayList<>();
 
 }

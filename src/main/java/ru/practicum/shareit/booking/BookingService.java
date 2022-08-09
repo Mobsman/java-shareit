@@ -31,7 +31,6 @@ public class BookingService {
     private final ItemRepository itemRepository;
     private final ConverterBookingToDto convert;
 
-    private final LocalDateTime currentTime = LocalDateTime.now();
 
     public BookingDto addBooking(long bookerId, BookingRequest booking) {
 
@@ -106,10 +105,10 @@ public class BookingService {
 
     public List<BookingDto> getAllBookingOfCurrentUser(long bookerId, Status status) {
 
+       LocalDateTime currentTime = LocalDateTime.now();
+
         switch (status) {
-            case ALL:
-                return checkEmptyList(bookingRepository.findBookingsByBookerIdOrderByStartDesc(bookerId)
-                        .stream().map(convert::convert).collect(Collectors.toList()));
+
             case PAST:
                 return bookingRepository.findBookingsByBookerIdAndEndBeforeOrderByStartDesc(bookerId, currentTime)
                         .stream().map(convert::convert).collect(Collectors.toList());
@@ -126,13 +125,14 @@ public class BookingService {
                 return bookingRepository.findBookingsByBookerIdAndStatusOrderByStartDesc(
                         bookerId, Status.WAITING).stream().map(convert::convert).collect(Collectors.toList());
             default:
-                throw new BookingStatusException("ошибка");
+                return checkEmptyList(bookingRepository.findBookingsByBookerIdOrderByStartDesc(bookerId)
+                        .stream().map(convert::convert).collect(Collectors.toList()));
         }
     }
 
     public List<BookingDto> getAllItemBookingsOfCurrentUser(long ownerId, Status status) {
 
-        Optional<User> owner = userRepository.findById(ownerId);
+        LocalDateTime currentTime = LocalDateTime.now();
 
         List<Item> items = itemRepository.findItemByOwnerId(ownerId);
 
@@ -143,9 +143,7 @@ public class BookingService {
         }
 
         switch (status) {
-            case ALL:
-                return checkEmptyList(bookingRepository.findBookingsByItemIdInOrderByStartDesc(itemsId)
-                        .stream().map(convert::convert).collect(Collectors.toList()));
+
             case PAST:
                 return bookingRepository.findBookingsByItemIdInAndEndBeforeOrderByStartDesc(itemsId, currentTime)
                         .stream().map(convert::convert).collect(Collectors.toList());
@@ -162,7 +160,8 @@ public class BookingService {
                 return bookingRepository.findBookingsByItemIdInAndStatusOrderByStartDesc(
                         itemsId, Status.WAITING).stream().map(convert::convert).collect(Collectors.toList());
             default:
-                throw new BookingStatusException("ошибка");
+                return checkEmptyList(bookingRepository.findBookingsByItemIdInOrderByStartDesc(itemsId)
+                        .stream().map(convert::convert).collect(Collectors.toList()));
         }
 
     }
