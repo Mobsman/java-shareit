@@ -34,10 +34,7 @@ public class BookingService {
 
     public BookingDto addBooking(long bookerId, BookingRequest booking) {
 
-        Optional<User> user = userRepository.findById(bookerId);
-        if (user.isEmpty()) {
-            throw new UserNotFoundException("Пользователь не найден");
-        }
+        User user = userRepository.findById(bookerId).orElseThrow(() -> new UserNotFoundException("пользователь не найден"));
 
         if (booking.getStart().isAfter(booking.getEnd()) ||
                 booking.getStart().isBefore(LocalDateTime.now())) {
@@ -50,7 +47,7 @@ public class BookingService {
             throw new ItemNotFoundException("Предмет не найден");
         }
 
-        if (itemRepo.get().getOwner().getId().equals(user.get().getId())) {
+        if (itemRepo.get().getOwner().getId().equals(user.getId())) {
             throw new BookingBookerException("Этот предмет ваш");
         }
 
@@ -59,7 +56,7 @@ public class BookingService {
         }
 
         Booking newBooking = new Booking();
-        newBooking.setBooker(user.get());
+        newBooking.setBooker(user);
         newBooking.setItem(itemRepo.get());
         newBooking.setStart(booking.getStart());
         newBooking.setEnd(booking.getEnd());
@@ -69,18 +66,15 @@ public class BookingService {
 
     public BookingDto getBookingById(long bookingId, long userId) {
 
-        Optional<User> user = userRepository.findById(userId);
-        if (user.isEmpty()) {
-            throw new UserNotFoundException("Пользователь не найден");
-        }
+        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("пользователь не найден"));
 
-        Optional<Booking> booking = bookingRepository.findById(bookingId);
+        Booking booking = bookingRepository.findById(bookingId).orElseThrow(() -> new BookingNotFoundException("Заявка не найдена"));
 
-        if (!user.get().getId().equals(booking.get().getBooker().getId()) &&
-                !booking.get().getItem().getOwner().getId().equals(userId)) {
+        if (!user.getId().equals(booking.getBooker().getId()) &&
+                !booking.getItem().getOwner().getId().equals(userId)) {
             throw new BookingNotFoundException("Заявка не найдена");
         }
-        return convert.convert(booking.get());
+        return convert.convert(booking);
     }
 
     public BookingDto approveOrRejectBooking(long bookingId, Boolean isApproved, long ownerId) {
@@ -105,7 +99,7 @@ public class BookingService {
 
     public List<BookingDto> getAllBookingOfCurrentUser(long bookerId, Status status) {
 
-       LocalDateTime currentTime = LocalDateTime.now();
+        LocalDateTime currentTime = LocalDateTime.now();
 
         switch (status) {
 

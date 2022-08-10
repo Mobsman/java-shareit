@@ -24,7 +24,7 @@ public class Comment {
     @Column(name = "created")
     private LocalDateTime created;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne()
     @JsonBackReference
     @JoinColumn(name = "item_id")
     private Item item;

@@ -20,6 +20,8 @@ import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserNotFoundException;
 import ru.practicum.shareit.user.repository.UserRepository;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -37,11 +39,9 @@ public class ItemService {
 
 
     public ItemDto create(Long ownerId, Item item) {
-        Optional<User> user = userRepository.findById(ownerId);
-        if (user.isEmpty()) {
-            throw new UserNotFoundException("Пользователь не найден");
-        }
-        item.setOwner(user.get());
+
+        User user = userRepository.findById(ownerId).orElseThrow(() -> new UserNotFoundException("пользователь не найден"));
+        item.setOwner(user);
         Item itm = itemRepository.save(item);
         return converter.convert(itemRepository.getReferenceById(itm.getId()));
 
@@ -49,49 +49,38 @@ public class ItemService {
 
     public ItemDto update(Long ownerId, Item item, Long itemId) {
 
-        Optional<User> user = userRepository.findById(ownerId);
-        if (user.isEmpty()) {
-            throw new UserNotFoundException("Пользователь не найден");
-        }
+        User user = userRepository.findById(ownerId).orElseThrow(() -> new UserNotFoundException("пользователь не найден"));
 
         Optional<Item> oldItem = itemRepository.findById(itemId);
 
-        if (oldItem.isEmpty() || !(oldItem.get().getOwner().getId().equals(user.get().getId()))) {
+        if (oldItem.isEmpty() || !(oldItem.get().getOwner().getId().equals(user.getId()))) {
             throw new ItemNotFoundException("Предмет не найден");
         }
 
-        if (oldItem.isPresent()) {
-            oldItem.get().setName(item.getName() == null ? oldItem.get().getName() : item.getName());
-            oldItem.get().setDescription(item.getDescription() == null ? oldItem.get().getDescription() : item.getDescription());
-            oldItem.get().setOwner(user.get());
-            oldItem.get().setAvailable(item.getAvailable() == null ? oldItem.get().getAvailable() : item.getAvailable());
-            Item updateItem = itemRepository.save(oldItem.get());
-            return converter.convert(itemRepository.getReferenceById(updateItem.getId()));
-        }
-        return null;
+        oldItem.get().setName(item.getName() == null ? oldItem.get().getName() : item.getName());
+        oldItem.get().setDescription(item.getDescription() == null ? oldItem.get().getDescription() : item.getDescription());
+        oldItem.get().setOwner(user);
+        oldItem.get().setAvailable(item.getAvailable() == null ? oldItem.get().getAvailable() : item.getAvailable());
+        Item updateItem = itemRepository.save(oldItem.get());
+        return converter.convert(itemRepository.getReferenceById(updateItem.getId()));
     }
 
     public ItemDto getById(Long itemId, Long userId) {
 
-        Optional<Item> item = itemRepository.findById(itemId);
-        if (item.isEmpty()) {
-            throw new ItemNotFoundException("предмет не найден");
-        }
-        Booking bookingBefore = bookingRepository.findFirstBookingByItemIdAndEndBeforeOrderByStartAsc(item.get().getId(), LocalDateTime.now());
-        Booking bookingAfter = bookingRepository.findFirstBookingByItemIdAndStartAfterOrderByStartAsc(item.get().getId(), LocalDateTime.now());
+        Item item = itemRepository.findById(itemId).orElseThrow(() -> new ItemNotFoundException("предмет не найден"));
 
-        if (userId.equals(item.get().getOwner().getId())) {
-            return converter.convertBooking(item.get(), bookingBefore, bookingAfter);
+        Booking bookingBefore = bookingRepository.findFirstBookingByItemIdAndEndBeforeOrderByStartAsc(item.getId(), LocalDateTime.now());
+        Booking bookingAfter = bookingRepository.findFirstBookingByItemIdAndStartAfterOrderByStartAsc(item.getId(), LocalDateTime.now());
+
+        if (userId.equals(item.getOwner().getId())) {
+            return converter.convertBooking(item, bookingBefore, bookingAfter);
         }
-        return converter.convert(item.get());
+        return converter.convert(item);
     }
 
     public Collection<ItemDto> getAllItemsByUserId(Long ownerId) {
 
-        Optional<User> user = userRepository.findById(ownerId);
-        if (user.isEmpty()) {
-            throw new UserNotFoundException("Пользователь не найден");
-        }
+        User user = userRepository.findById(ownerId).orElseThrow(() -> new UserNotFoundException("пользователь не найден"));
 
         Collection<Item> items = itemRepository.findItemByOwnerId(ownerId);
 
@@ -105,14 +94,14 @@ public class ItemService {
 
     public Collection<ItemDto> searchItemByName(String itemName) {
 
-        String search = itemName.toLowerCase();
+        String searchItem = itemName.toLowerCase();
 
-        Collection<Item> items = itemRepository.findItemByNameIgnoreCaseContainingOrDescriptionIgnoreCaseContainingAndAvailableIsTrue(search, search);
+        Collection<Item> items = itemRepository.findItemByNameIgnoreCaseContainingOrDescriptionIgnoreCaseContainingAndAvailableIsTrue(searchItem, searchItem);
         return items.stream().map(converter::convert).collect(Collectors.toList());
 
     }
 
-    public CommentDto addComment(long userId, long itemId, CommentRequest comment) {
+    public CommentDto addComment(long userId, long itemId, @NotNull @NotBlank CommentRequest comment) {
 
         User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("пользователь не найден"));
 
@@ -130,13 +119,13 @@ public class ItemService {
                     "комментарий пустой");
         }
 
-        Comment com = new Comment();
-        com.setText(comment.getText());
-        com.setCreated(LocalDateTime.now());
-        com.setItem(item);
-        com.setUser(user);
+        Comment newComment = new Comment();
+        newComment.setText(comment.getText());
+        newComment.setCreated(LocalDateTime.now());
+        newComment.setItem(item);
+        newComment.setUser(user);
 
-        Comment saveComment = commentRepository.save(com);
+        Comment saveComment = commentRepository.save(newComment);
 
         return commentConverter.convert(commentRepository.getReferenceById(saveComment.getId()));
     }
