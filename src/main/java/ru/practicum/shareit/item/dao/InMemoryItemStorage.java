@@ -1,4 +1,4 @@
-package ru.practicum.shareit.item;
+package ru.practicum.shareit.item.dao;
 
 import org.springframework.stereotype.Component;
 import ru.practicum.shareit.item.model.Item;
@@ -20,6 +20,7 @@ public class InMemoryItemStorage implements ItemDao {
         items.put(item.getId(), item);
         return item;
     }
+
 
     @Override
     public Item update(Item item, Long id) {
