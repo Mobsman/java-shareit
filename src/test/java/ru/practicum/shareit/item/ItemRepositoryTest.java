@@ -51,7 +51,7 @@ class ItemRepositoryTest {
             null,
             null);
 
-    ItemRequest itemRequest = new ItemRequest(1l,
+    ItemRequest itemRequest = new ItemRequest(1L,
             "Тележка",
             userTest2,
             LocalDateTime.now());

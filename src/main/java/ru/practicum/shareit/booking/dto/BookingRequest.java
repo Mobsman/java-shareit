@@ -9,8 +9,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class BookingRequest {
 
-    public BookingRequest(){
-
+    public BookingRequest() {
     }
 
     private long itemId;

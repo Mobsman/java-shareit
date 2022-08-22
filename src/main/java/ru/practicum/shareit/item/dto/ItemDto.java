@@ -14,8 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ItemDto {
 
-    public ItemDto(){
-
+    public ItemDto() {
     }
 
     private Long id;
