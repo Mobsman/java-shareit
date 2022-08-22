@@ -1,6 +1,7 @@
 package ru.practicum.shareit.booking.model;
 
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import ru.practicum.shareit.item.model.Item;
@@ -14,8 +15,11 @@ import java.time.LocalDateTime;
 @Table(name = "bookings")
 @Getter
 @Setter
+@AllArgsConstructor
 public class Booking {
 
+    public Booking() {
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

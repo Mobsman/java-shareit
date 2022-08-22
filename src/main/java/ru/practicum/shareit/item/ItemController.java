@@ -45,16 +45,22 @@ public class ItemController {
 
 
     @GetMapping
-    public Collection<ItemDto> getAllItemsByUserId(@NotEmpty @RequestHeader(USER_ID_HEADER) long id) {
-        return service.getAllItemsByUserId(id);
+    public Collection<ItemDto> getAllItemsByUserId(@NotEmpty @RequestHeader(USER_ID_HEADER) long id,
+                                                   @RequestParam(defaultValue = "0") Integer from,
+                                                   @RequestParam(defaultValue = "10") Integer size) {
+        return service.getAllItemsByUserId(id, from, size);
     }
 
     @GetMapping("/search")
-    public Collection<ItemDto> searchItem(@RequestParam String text) {
+    public Collection<ItemDto> searchItem(@RequestParam String text,
+                                          @RequestParam(defaultValue = "0") Integer from,
+                                          @RequestParam(defaultValue = "10") Integer size) {
+
         if (text == null || text.isEmpty()) {
             return new ArrayList<>();
         }
-        return service.searchItemByName(text);
+
+        return service.searchItemByName(text, from, size);
     }
 
     @PostMapping("{itemId}/comment")

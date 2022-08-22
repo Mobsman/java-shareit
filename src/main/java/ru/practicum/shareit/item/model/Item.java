@@ -1,9 +1,10 @@
 package ru.practicum.shareit.item.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import ru.practicum.shareit.requests.ItemRequest;
+import ru.practicum.shareit.requests.model.ItemRequest;
 import ru.practicum.shareit.user.User;
 
 import javax.persistence.*;
@@ -17,8 +18,12 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "items")
+@AllArgsConstructor
 public class Item {
 
+
+    public Item() {
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,6 +43,9 @@ public class Item {
     @NotNull
     @Column(name = "is_available")
     private Boolean available;
+
+    @Transient
+    private Long requestId;
 
     @ManyToOne()
     @JoinColumn(name = "owner_id")

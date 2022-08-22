@@ -1,6 +1,9 @@
 package ru.practicum.shareit.booking;
 
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -128,7 +131,9 @@ public class BookingService {
 
         LocalDateTime currentTime = LocalDateTime.now();
 
-        List<Item> items = itemRepository.findItemByOwnerId(ownerId);
+        Pageable pageable = PageRequest.of(0, 10);
+
+        Page<Item> items = itemRepository.findItemByOwnerId(ownerId,pageable);
 
         List<Long> itemsId = items.stream().map(Item::getId).collect(Collectors.toList());
 

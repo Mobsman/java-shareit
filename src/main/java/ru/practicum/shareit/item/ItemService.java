@@ -1,6 +1,9 @@
 package ru.practicum.shareit.item;
 
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -16,6 +19,8 @@ import ru.practicum.shareit.item.model.CommentRequest;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.CommentRepository;
 import ru.practicum.shareit.item.repository.ItemRepository;
+import ru.practicum.shareit.requests.model.ItemRequest;
+import ru.practicum.shareit.requests.repository.ItemRequestRepository;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserNotFoundException;
 import ru.practicum.shareit.user.repository.UserRepository;
@@ -34,6 +39,7 @@ public class ItemService {
     private final UserRepository userRepository;
     private final BookingRepository bookingRepository;
     private final CommentRepository commentRepository;
+    private final ItemRequestRepository itemRequestRepository;
     private final ConverterItemToDto converter;
     private final ConverterCommentItemToCommentDto commentConverter;
 
@@ -41,6 +47,11 @@ public class ItemService {
     public ItemDto create(Long ownerId, Item item) {
 
         User user = userRepository.findById(ownerId).orElseThrow(() -> new UserNotFoundException("пользователь не найден"));
+
+        if (item.getRequestId() != null) {
+            Optional<ItemRequest> request = itemRequestRepository.findById(item.getRequestId());
+            item.setRequest(request.orElse(null));
+        }
         item.setOwner(user);
         Item itm = itemRepository.save(item);
         return converter.convert(itemRepository.getReferenceById(itm.getId()));
@@ -75,14 +86,15 @@ public class ItemService {
         if (userId.equals(item.getOwner().getId())) {
             return converter.convertBooking(item, bookingBefore, bookingAfter);
         }
-        return converter.convert(item);
+        ItemDto itemDto = converter.convert(item);
+        return itemDto;
     }
 
-    public Collection<ItemDto> getAllItemsByUserId(Long ownerId) {
+    public Collection<ItemDto> getAllItemsByUserId(Long ownerId, Integer from, Integer size) {
 
         User user = userRepository.findById(ownerId).orElseThrow(() -> new UserNotFoundException("пользователь не найден"));
-
-        Collection<Item> items = itemRepository.findItemByOwnerId(ownerId);
+        Pageable pageable = PageRequest.of(from, size);
+        Page<Item> items = itemRepository.findItemByOwnerId(ownerId, pageable);
 
         return items.stream().map(item -> converter.convertBooking(item,
                         bookingRepository.findFirstBookingByItemIdAndEndBeforeOrderByStartAsc(item.getId(), LocalDateTime.now()),
@@ -92,11 +104,13 @@ public class ItemService {
 
     }
 
-    public Collection<ItemDto> searchItemByName(String itemName) {
+    public Collection<ItemDto> searchItemByName(String itemName, Integer from, Integer size) {
 
         String searchItem = itemName.toLowerCase();
+        Pageable pageable = PageRequest.of(from, size);
 
-        Collection<Item> items = itemRepository.findItemByNameIgnoreCaseContainingOrDescriptionIgnoreCaseContainingAndAvailableIsTrue(searchItem, searchItem);
+        Page<Item> items = itemRepository.findItemByNameIgnoreCaseContainingOrDescriptionIgnoreCaseContainingAndAvailableIsTrue(searchItem, searchItem, pageable);
+
         return items.stream().map(converter::convert).collect(Collectors.toList());
 
     }

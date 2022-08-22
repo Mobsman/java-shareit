@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import ru.practicum.shareit.booking.dto.BookingForItem;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.item.model.Item;
+
 import java.util.stream.Collectors;
 
 @Component
@@ -19,6 +20,7 @@ public class ConverterItemToDto implements Converter<Item, ItemDto> {
                 .name(source.getName())
                 .description(source.getDescription())
                 .available(source.getAvailable())
+                .requestId(source.getRequest() == null ? null : source.getRequest().getId())
                 .comments(source.getComments() == null ? null : source.getComments().stream().map(ConverterCommentItemToCommentDto::converter).collect(Collectors.toList())).build();
 
 
