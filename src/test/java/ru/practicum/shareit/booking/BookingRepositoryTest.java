@@ -86,14 +86,6 @@ class BookingRepositoryTest {
     }
 
     @Test
-    void testFindByBooker() {
-        Booking testBooking = bookingRepository.getReferenceById(futureBooking.getBooker().getId());
-        assertThat(testBooking.getBooker()).isEqualTo(futureBooking.getBooker());
-        assertThat(testBooking.getItem()).isEqualTo(futureBooking.getItem());
-    }
-
-
-    @Test
     void testFindBookingsByBookerIdAndEndBeforeOrderByStartDesc() {
         Booking testBooking = bookingRepository.findBookingsByBookerIdAndEndBeforeOrderByStartDesc(pastBooking.getBooker().getId(),
                 currentDateTime).get(0);

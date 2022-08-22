@@ -76,25 +76,5 @@ public class ItemServiceIntegrationTest {
         assertThat(new ArrayList<>(itemsDto).get(0).getName()).isEqualTo("Тележка");
     }
 
-    @Test
-    void testCreateComment() {
-        User userOwnerItem = userRepository.save(user);
-        User userBooking = userRepository.save(user2);
-        ItemDto item1 = itemService.create(userOwnerItem.getId(), item);
-        Booking booking = new Booking(
-                1L,
-                currentDateTime.minusDays(2),
-                currentDateTime.minusDays(1),
-                item,
-                user2,
-                Status.APPROVED
-        );
-        Booking book = bookingRepository.save(booking);
-        CommentDto commentDto = itemService.addComment(userBooking.getId(), item1.getId(),
-                new CommentRequest(
-                        "Text"));
-        ItemDto itemDto = itemService.getById(item1.getId(), userBooking.getId());
-        assertThat(itemDto.getComments()).hasSize(1);
-    }
 }
 
