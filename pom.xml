@@ -161,7 +161,7 @@
 											<limit>
 												<counter>INSTRUCTION</counter>
 												<value>COVEREDRATIO</value>
-												<maximum>0.01</maximum>
+												<maximum>0.4</maximum>
 											</limit>
 											<limit>
 												<counter>LINE</counter>
@@ -186,7 +186,7 @@
 											<limit>
 												<counter>CLASS</counter>
 												<value>MISSEDCOUNT</value>
-												<maximum>1</maximum>
+												<maximum>10</maximum>
 											</limit>
 										</limits>
 									</rule>
