@@ -72,12 +72,6 @@ class ItemRepositoryTest {
 
     }
 
-    @Test
-    void testFindOwnerById() {
-        Pageable pageable = PageRequest.of(0, 10);
-        Page<Item> items = itemRepository.findItemByOwnerId(userTest1.getId(), pageable);
-        assertThat(items.get().findFirst().get().getName().equals(itemTest1.getName()));
-    }
 
     @Test
     void testGetAllRequests() {

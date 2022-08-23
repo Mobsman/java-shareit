@@ -45,10 +45,8 @@ public class ItemController {
 
 
     @GetMapping
-    public Collection<ItemDto> getAllItemsByUserId(@NotEmpty @RequestHeader(USER_ID_HEADER) long id,
-                                                   @RequestParam(defaultValue = "0") Integer from,
-                                                   @RequestParam(defaultValue = "10") Integer size) {
-        return service.getAllItemsByUserId(id, from, size);
+    public Collection<ItemDto> getAllItemsByUserId(@NotEmpty @RequestHeader(USER_ID_HEADER) long id) {
+        return service.getAllItemsByUserId(id);
     }
 
     @GetMapping("/search")

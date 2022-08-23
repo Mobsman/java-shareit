@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface ItemRepository extends JpaRepository<Item, Long> {
 
-    Page<Item> findItemByOwnerId(Long ownerId, Pageable pageable);
+    List<Item> findItemByOwnerId(Long ownerId);
 
     Page<Item> findItemByNameIgnoreCaseContainingOrDescriptionIgnoreCaseContainingAndAvailableIsTrue(String name, String description, Pageable pageable);
 

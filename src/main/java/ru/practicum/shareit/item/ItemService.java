@@ -90,11 +90,11 @@ public class ItemService {
         return itemDto;
     }
 
-    public Collection<ItemDto> getAllItemsByUserId(Long ownerId, Integer from, Integer size) {
+    public Collection<ItemDto> getAllItemsByUserId(Long ownerId) {
 
         User user = userRepository.findById(ownerId).orElseThrow(() -> new UserNotFoundException("пользователь не найден"));
-        Pageable pageable = PageRequest.of(from, size);
-        Page<Item> items = itemRepository.findItemByOwnerId(ownerId, pageable);
+
+        List<Item> items = itemRepository.findItemByOwnerId(ownerId);
 
         return items.stream().map(item -> converter.convertBooking(item,
                         bookingRepository.findFirstBookingByItemIdAndEndBeforeOrderByStartAsc(item.getId(), LocalDateTime.now()),

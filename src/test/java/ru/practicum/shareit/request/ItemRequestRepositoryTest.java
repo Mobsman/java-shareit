@@ -37,7 +37,7 @@ class ItemRequestRepositoryTest {
             null,
             "маленька тележк",
             null,
-            LocalDateTime.now()
+            null
     );
 
 
@@ -56,13 +56,9 @@ class ItemRequestRepositoryTest {
         userTest1 = userRepository.save(new User(null, "name", "test@test1.com"));
         userTest2 = userRepository.save(new User(null, "name", "test@test2.com"));
         itemRequest.setRequester(userTest1);
+        itemRequest.setCreated(LocalDateTime.now());
         itemTest1.setRequest(itemRequestRepository.save(itemRequest));
-    }
 
-    @Test
-    void testFindByRequesterId() {
-        ItemRequest testItemRequest = itemRequestRepository.findById(userTest1.getId()).get();
-        assertThat(testItemRequest.getDescription()).isEqualTo(itemRequest.getDescription());
     }
 
     @Test

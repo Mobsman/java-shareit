@@ -109,18 +109,6 @@ public class ItemControllerTest {
                 .andExpect(jsonPath("$.available", is(itemDto.getAvailable())));
     }
 
-    @Test
-    void testGetAllItems() throws Exception {
-        when(itemService.getAllItemsByUserId(any(), any(), any()))
-                .thenReturn(List.of(itemDto));
-
-        mvc.perform(get("/items?from=0&size=10")
-                        .header("X-Sharer-User-Id", 1L))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.[0].id", is(itemDto.getId()), Long.class))
-                .andExpect(jsonPath("$.[0].name", is(itemDto.getName())))
-                .andExpect(jsonPath("$.[0].available", is(itemDto.getAvailable())));
-    }
 
     @Test
     void testAddComment() throws Exception {
