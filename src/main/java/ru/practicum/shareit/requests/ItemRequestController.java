@@ -37,12 +37,7 @@ public class ItemRequestController {
     public List<ItemRequestDto> getAll(@RequestHeader(USER_ID_HEADER) Long id,
                                        @RequestParam(defaultValue = "0") Integer from,
                                        @RequestParam(defaultValue = "10") Integer size) {
-        if (from < 0) {
-            throw new IllegalArgumentException();
-        }
-        if (size < 0) {
-            throw new IllegalArgumentException();
-        }
+
         return itemRequestService.getAllRequest(id, from, size);
     }
 
@@ -50,7 +45,7 @@ public class ItemRequestController {
     public ItemRequestDto getRequestById(@RequestHeader(USER_ID_HEADER) Long id,
                                          @PathVariable Long requestId) {
 
-        return itemRequestService.geyRequestById(requestId,id);
+        return itemRequestService.geyRequestById(requestId, id);
     }
 
 }

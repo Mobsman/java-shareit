@@ -61,6 +61,13 @@ public class ItemRequestService {
 
     public List<ItemRequestDto> getAllRequest(Long requesterId, Integer from, Integer size) {
 
+        if (from < 0) {
+            throw new IllegalArgumentException();
+        }
+        if (size < 0) {
+            throw new IllegalArgumentException();
+        }
+
         User user = userRepository.findById(requesterId).orElseThrow(() -> new UserNotFoundException("пользователь не найден"));
 
         Pageable pageable = PageRequest.of(from, size);
@@ -69,7 +76,7 @@ public class ItemRequestService {
         List<Item> items = null;
 
         try {
-            items = itemRepository.findItemByRequest(itemRequestPage.get().findFirst().get().getId());
+            items = itemRepository.findItemByRequest_Id(itemRequestPage.get().findFirst().get().getId());
         } catch (Exception e) {
             return new ArrayList<>();
         }
@@ -98,7 +105,7 @@ public class ItemRequestService {
     private List<ItemDto> getItems(Long requesterId) {
 
         User user = userRepository.findById(requesterId).orElseThrow(() -> new UserNotFoundException("пользователь не найден"));
-        List<Item> items = itemRepository.findItemByRequest(requesterId);
+        List<Item> items = itemRepository.findItemByRequest_Id(requesterId);
         return items.stream().map(i -> itemConverter.convert(i)).collect(Collectors.toList());
 
     }

@@ -19,7 +19,6 @@ import ru.practicum.shareit.item.model.CommentRequest;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.CommentRepository;
 import ru.practicum.shareit.item.repository.ItemRepository;
-import ru.practicum.shareit.requests.model.ItemRequest;
 import ru.practicum.shareit.requests.repository.ItemRequestRepository;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserNotFoundException;
@@ -49,9 +48,9 @@ public class ItemService {
         User user = userRepository.findById(ownerId).orElseThrow(() -> new UserNotFoundException("пользователь не найден"));
 
         if (item.getRequestId() != null) {
-            Optional<ItemRequest> request = itemRequestRepository.findById(item.getRequestId());
-            item.setRequest(request.orElse(null));
+            item.setRequest(itemRequestRepository.findById(item.getRequestId()).orElse(null));
         }
+
         item.setOwner(user);
         Item itm = itemRepository.save(item);
         return converter.convert(itemRepository.getReferenceById(itm.getId()));
