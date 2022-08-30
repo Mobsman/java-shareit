@@ -1,6 +1,7 @@
 package ru.practicum.shareit.booking;
 
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -97,34 +98,35 @@ public class BookingService {
 
     }
 
-    public List<BookingDto> getAllBookingOfCurrentUser(long bookerId, Status status) {
+    public List<BookingDto> getAllBookingOfCurrentUser(long bookerId, Status status,Integer from, Integer size) {
+
 
         LocalDateTime currentTime = LocalDateTime.now();
 
         switch (status) {
 
             case PAST:
-                return bookingRepository.findBookingsByBookerIdAndEndBeforeOrderByStartDesc(bookerId, currentTime)
+                return bookingRepository.findBookingsByBookerIdAndEndBeforeOrderByStartDesc(bookerId, currentTime,  PageRequest.of(from / size, size))
                         .stream().map(convert::convert).collect(Collectors.toList());
             case CURRENT:
-                return bookingRepository.findBookingsByBookerIdAndStartBeforeAndEndAfterOrderByStartDesc(bookerId, currentTime, currentTime)
+                return bookingRepository.findBookingsByBookerIdAndStartBeforeAndEndAfterOrderByStartDesc(bookerId, currentTime, currentTime, PageRequest.of(from / size, size))
                         .stream().map(convert::convert).collect(Collectors.toList());
             case FUTURE:
                 return bookingRepository.findBookingsByBookerIdAndStartAfterOrderByStartDesc(
-                        bookerId, currentTime).stream().map(convert::convert).collect(Collectors.toList());
+                        bookerId, currentTime, PageRequest.of(from / size, size)).stream().map(convert::convert).collect(Collectors.toList());
             case REJECTED:
                 return bookingRepository.findBookingsByBookerIdAndStatusOrderByStartDesc(
-                        bookerId, Status.REJECTED).stream().map(convert::convert).collect(Collectors.toList());
+                        bookerId, Status.REJECTED, PageRequest.of(from / size, size)).stream().map(convert::convert).collect(Collectors.toList());
             case WAITING:
                 return bookingRepository.findBookingsByBookerIdAndStatusOrderByStartDesc(
-                        bookerId, Status.WAITING).stream().map(convert::convert).collect(Collectors.toList());
+                        bookerId, Status.WAITING, PageRequest.of(from / size, size)).stream().map(convert::convert).collect(Collectors.toList());
             default:
-                return checkEmptyList(bookingRepository.findBookingsByBookerIdOrderByStartDesc(bookerId)
+                return checkEmptyList(bookingRepository.findBookingsByBookerIdOrderByStartDesc(bookerId, PageRequest.of(from / size, size))
                         .stream().map(convert::convert).collect(Collectors.toList()));
         }
     }
 
-    public List<BookingDto> getAllItemBookingsOfCurrentUser(long ownerId, Status status) {
+    public List<BookingDto> getAllItemBookingsOfCurrentUser(long ownerId, Status status,Integer from, Integer size) {
 
         LocalDateTime currentTime = LocalDateTime.now();
 
@@ -139,22 +141,22 @@ public class BookingService {
         switch (status) {
 
             case PAST:
-                return bookingRepository.findBookingsByItemIdInAndEndBeforeOrderByStartDesc(itemsId, currentTime)
+                return bookingRepository.findBookingsByItemIdInAndEndBeforeOrderByStartDesc(itemsId, currentTime, PageRequest.of(from / size, size))
                         .stream().map(convert::convert).collect(Collectors.toList());
             case CURRENT:
-                return bookingRepository.findBookingsByItemIdInAndStartBeforeAndEndAfterOrderByStartDesc(itemsId, currentTime, currentTime)
+                return bookingRepository.findBookingsByItemIdInAndStartBeforeAndEndAfterOrderByStartDesc(itemsId, currentTime, currentTime, PageRequest.of(from / size, size))
                         .stream().map(convert::convert).collect(Collectors.toList());
             case FUTURE:
                 return bookingRepository.findBookingsByItemIdInAndStartAfterOrderByStartDesc(
-                        itemsId, currentTime).stream().map(convert::convert).collect(Collectors.toList());
+                        itemsId, currentTime, PageRequest.of(from / size, size)).stream().map(convert::convert).collect(Collectors.toList());
             case REJECTED:
                 return bookingRepository.findBookingsByItemIdInAndStatusOrderByStartDesc(
-                        itemsId, Status.REJECTED).stream().map(convert::convert).collect(Collectors.toList());
+                        itemsId, Status.REJECTED, PageRequest.of(from / size, size)).stream().map(convert::convert).collect(Collectors.toList());
             case WAITING:
                 return bookingRepository.findBookingsByItemIdInAndStatusOrderByStartDesc(
-                        itemsId, Status.WAITING).stream().map(convert::convert).collect(Collectors.toList());
+                        itemsId, Status.WAITING, PageRequest.of(from / size, size)).stream().map(convert::convert).collect(Collectors.toList());
             default:
-                return checkEmptyList(bookingRepository.findBookingsByItemIdInOrderByStartDesc(itemsId)
+                return checkEmptyList(bookingRepository.findBookingsByItemIdInOrderByStartDesc(itemsId, PageRequest.of(from / size, size))
                         .stream().map(convert::convert).collect(Collectors.toList()));
         }
 

@@ -1,6 +1,7 @@
 package ru.practicum.shareit.user;
 
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,9 +13,12 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 @Entity
+@AllArgsConstructor
 @Table(name = "users")
 public class User {
 
+    public User() {
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

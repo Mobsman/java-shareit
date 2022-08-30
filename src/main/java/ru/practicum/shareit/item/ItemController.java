@@ -50,11 +50,15 @@ public class ItemController {
     }
 
     @GetMapping("/search")
-    public Collection<ItemDto> searchItem(@RequestParam String text) {
+    public Collection<ItemDto> searchItem(@RequestParam String text,
+                                          @RequestParam(defaultValue = "0") Integer from,
+                                          @RequestParam(defaultValue = "10") Integer size) {
+
         if (text == null || text.isEmpty()) {
             return new ArrayList<>();
         }
-        return service.searchItemByName(text);
+
+        return service.searchItemByName(text, from, size);
     }
 
     @PostMapping("{itemId}/comment")

@@ -40,16 +40,24 @@ public class BookingController {
     }
 
     @GetMapping
-    public List<BookingDto> getAllBookingOfCurrentUser(@RequestParam(name = "state", defaultValue = "ALL")
-                                                               Status state,
-                                                       @RequestHeader(USER_ID_HEADER) long userId) {
-        return bookingService.getAllBookingOfCurrentUser(userId, state);
+    public List<BookingDto> getAllBookingOfCurrentUser(@RequestHeader("X-Sharer-User-Id") Long userId,
+                                                       @RequestParam(defaultValue = "ALL") Status state,
+                                                       @Valid @RequestParam(defaultValue = "0") Integer from,
+                                                       @RequestParam(defaultValue = "10") Integer size) {
+        if (from < 0) {
+            throw new IllegalArgumentException();
+        }
+        return bookingService.getAllBookingOfCurrentUser(userId, state, from, size);
     }
 
     @GetMapping("/owner")
-    public List<BookingDto> getAllItemBookingsOfCurrentUser(@RequestParam(name = "state", defaultValue = "ALL")
-                                                                    Status state,
-                                                            @RequestHeader(USER_ID_HEADER) long userId) {
-        return bookingService.getAllItemBookingsOfCurrentUser(userId, state);
+    public List<BookingDto> getAllItemBookingsOfCurrentUser(@RequestHeader("X-Sharer-User-Id") Long userId,
+                                                            @RequestParam(defaultValue = "ALL") Status state,
+                                                            @Valid @RequestParam(defaultValue = "0") Integer from,
+                                                            @RequestParam(defaultValue = "10") Integer size) {
+        if (from < 0) {
+            throw new IllegalArgumentException();
+        }
+        return bookingService.getAllItemBookingsOfCurrentUser(userId, state, from, size);
     }
 }
