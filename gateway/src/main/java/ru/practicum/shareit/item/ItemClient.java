@@ -11,7 +11,6 @@ import ru.practicum.shareit.item.itemRequest.CommentRequest;
 import ru.practicum.shareit.item.itemRequest.ItemCreateRequest;
 import ru.practicum.shareit.item.itemRequest.ItemUpdateRequest;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @Service

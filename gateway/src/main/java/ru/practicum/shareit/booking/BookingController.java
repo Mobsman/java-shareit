@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.bookingRequest.BookingRequest;
 import ru.practicum.shareit.booking.bookingRequest.Status;
 import ru.practicum.shareit.booking.exception.BookingStateException;
-import ru.practicum.shareit.booking.exception.ErrorControllerAdvice;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
