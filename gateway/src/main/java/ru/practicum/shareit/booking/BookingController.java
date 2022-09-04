@@ -17,7 +17,7 @@ import javax.validation.constraints.PositiveOrZero;
 @RequiredArgsConstructor
 @Slf4j
 @Validated
-public class BookingController  {
+public class BookingController {
 
     private static final String USER_ID_HEADER = "X-Sharer-User-Id";
     private final BookingClient bookingClient;
@@ -26,11 +26,14 @@ public class BookingController  {
     public Object addBooking(@RequestHeader(USER_ID_HEADER) long userId,
                              @RequestBody @Valid BookingRequest bookingRequest) {
 
+        log.info("Creating booking {}, userId={}", bookingRequest, userId);
         return bookingClient.addBooking(userId, bookingRequest);
     }
 
     @GetMapping("/{bookingId}")
     public Object getBooking(@RequestHeader(USER_ID_HEADER) long userId, @PathVariable Long bookingId) {
+
+        log.info("Get booking {}, userId={}", bookingId, userId);
         return bookingClient.getBooking(userId, bookingId);
     }
 
@@ -38,6 +41,8 @@ public class BookingController  {
     public Object approveOrRejectBooking(@PathVariable long bookingId,
                                          @RequestParam("approved") Boolean isApproved,
                                          @RequestHeader(USER_ID_HEADER) long ownerId) {
+
+        log.info("Approve booking {} by userId={}", bookingId, ownerId);
         return bookingClient.approveOrRejectBooking(bookingId, isApproved, ownerId);
     }
 
@@ -50,6 +55,7 @@ public class BookingController  {
                 .from(stateParam)
                 .orElseThrow(() -> new BookingStateException(stateParam));
 
+        log.info("Get booking with state {}, userId={}, from={}, size={}", stateParam, userId, from, size);
         return bookingClient.getBookings(userId, state, from, size);
     }
 
@@ -62,6 +68,7 @@ public class BookingController  {
                 .from(stateParam)
                 .orElseThrow(() -> new BookingStateException(stateParam));
 
+        log.info("Get bookings by owner userId={}", userId);
         return bookingClient.getBookingsOfOwner(userId, state, from, size);
     }
 

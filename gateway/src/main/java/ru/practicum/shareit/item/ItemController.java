@@ -27,6 +27,7 @@ public class ItemController {
     public Object createItem(@RequestBody @Valid ItemCreateRequest request,
                              @RequestHeader(USER_ID_HEADER) @Positive Long userOwner) {
 
+        log.info("Creating item" + request.toString() + " by owner id " + userOwner);
         return itemClient.createItem(request, userOwner);
     }
 
@@ -35,7 +36,7 @@ public class ItemController {
                              @PathVariable("itemId") @Positive Long itemId,
                              @RequestHeader(USER_ID_HEADER) @Positive Long userOwner) {
 
-
+        log.info("Updating item with id " + itemId);
         return itemClient.updateItem(request, itemId, userOwner);
     }
 
@@ -43,6 +44,7 @@ public class ItemController {
     public Object getItemById(@PathVariable("itemId") @Positive Long itemId,
                               @RequestHeader(USER_ID_HEADER) @Positive Long userOwner) {
 
+        log.info("Getting items with id " + itemId);
         return itemClient.getItemById(itemId, userOwner);
     }
 
@@ -51,6 +53,7 @@ public class ItemController {
                                       @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
                                       @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
 
+        log.info("Get items of owner id " + userOwner);
         return itemClient.getAllItems(userOwner, from, size);
     }
 
@@ -60,6 +63,7 @@ public class ItemController {
                               @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
                               @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
 
+        log.info("Search items by text: " + text);
         return itemClient.search(userOwner, text, from, size);
     }
 
@@ -68,6 +72,8 @@ public class ItemController {
                               @PathVariable long itemId,
                               @RequestBody @Valid CommentRequest commentRequest) {
 
+        log.info("Add comment " + commentRequest.toString() + " to item id " + itemId +
+                " by user id " + userId);
         return itemClient.addComment(userId, commentRequest, itemId);
     }
 
